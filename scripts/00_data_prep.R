@@ -44,3 +44,7 @@ autoplot(arrivals_ts) +
   xlab("Year") +
   ylab("Number of Arrivals") +
   theme_minimal()
+
+# Option A: Standard Classical Decomposition
+decomp <- decompose(arrivals_ts, type = "additive")
+plot(decomp)
