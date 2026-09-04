@@ -298,16 +298,30 @@ legend("topleft",
        legend = c("Actual CPI", "Fitted (train) / Forecast (test)", "Train/Test split"),
        lty = c(1, 2, 3), lwd = c(2, 2, 2), col = c("black", "blue", "red"), bty = "n")
 
-
 # ==============================================================================
 # STEP 10: Residual Diagnostics (Ljung-Box Test) on TEST errors
 # ==============================================================================
 
 cat("\n==============================================================\n")
-cat("                RESIDUAL DIAGNOSTICS (Ljung-Box Test) \n")
+cat("       1. PROPHET RESIDUAL DIAGNOSTICS (Ljung-Box Test) \n")
 cat("==============================================================\n")
 
+# Create the time series from Prophet's errors
 residual_ts <- ts(rolling_results$Error, start = c(2024, 1), frequency = 12)
+
+# Run Ljung-Box test on Prophet's errors
 checkresiduals(residual_ts)
+
+
+cat("\n==============================================================\n")
+cat("       2. HYBRID (PROPHET + ARIMA) RESIDUAL DIAGNOSTICS \n")
+cat("==============================================================\n")
+
+# Fit ARIMA directly on the Prophet errors
+residual_arima <- auto.arima(residual_ts)
+
+# Check the residuals of the new Hybrid model
+checkresiduals(residual_arima)
+
 
 cat("\nAll outputs saved successfully.\n")
